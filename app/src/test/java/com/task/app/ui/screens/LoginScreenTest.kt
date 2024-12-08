@@ -4,7 +4,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
@@ -14,27 +13,23 @@ class LoginScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun navigatesToMedicineListOnLogin() {
-        val fakeNavigator = FakeNavigator()
+    fun testLoginNavigation() {
+        var navigatedRoute: String? = null
+        val mockNavigator = object : Navigator {
+            override fun navigateTo(route: String) {
+                navigatedRoute = route
+            }
+        }
 
         composeTestRule.setContent {
-            LoginScreen(navigator = fakeNavigator)
+            LoginScreen(navigator = mockNavigator)
         }
 
-        composeTestRule.onNodeWithText("Enter Username or Email")
-            .performTextInput("TestUser")
-        composeTestRule.onNodeWithText("Login")
-            .performClick()
+        // Simulate user input and login click
+        composeTestRule.onNodeWithText("Enter Username or Email").performTextInput("JohnDoe")
+        composeTestRule.onNodeWithText("Login").performClick()
 
-        // Verify the navigation route
-        assertEquals("medicine_list/TestUser", fakeNavigator.lastRoute)
-    }
-
-    class FakeNavigator : Navigator {
-        var lastRoute: String? = null
-
-        override fun navigateTo(route: String) {
-            lastRoute = route
-        }
+        // Verify navigation route
+        assert(navigatedRoute == "medicine_list/JohnDoe")
     }
 }

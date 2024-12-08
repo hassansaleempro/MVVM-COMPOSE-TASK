@@ -77,12 +77,7 @@ fun MedicineCard(
     }
 }
 
-@Composable
-fun getGreetingMessage(): String {
-    val currentHour = remember {
-        java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-    }
-
+fun getGreetingMessage(currentHour: Int = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)): String {
     return when (currentHour) {
         in 5..11 -> "Good Morning"
         in 12..16 -> "Good Afternoon"
