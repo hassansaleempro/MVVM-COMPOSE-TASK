@@ -28,7 +28,7 @@ class MedicineViewModel @Inject constructor(
         fetchAndStoreMedicines()
     }
 
-    private fun fetchAndStoreMedicines() {
+    fun fetchAndStoreMedicines() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true // Start loading
@@ -67,13 +67,6 @@ class MedicineViewModel @Inject constructor(
             }
         }
         return medicines
-    }
-
-    /**
-     * Get medicine details by ID
-     */
-    fun getMedicineByName(name: String): Medicine? {
-        return _medicines.value.find { it.name == name }
     }
 
 }

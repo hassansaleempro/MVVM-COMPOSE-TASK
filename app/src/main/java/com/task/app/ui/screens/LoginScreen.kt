@@ -10,13 +10,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navigator: Navigator) {
     var username by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
         TextField(
@@ -26,10 +24,12 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            navController.navigate("medicine_list/$username")
-        }) {
+        Button(onClick = { navigator.navigateTo("medicine_list/$username") }) {
             Text("Login")
         }
     }
+}
+
+interface Navigator {
+    fun navigateTo(route: String)
 }

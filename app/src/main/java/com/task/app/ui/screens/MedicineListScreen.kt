@@ -12,6 +12,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,15 +20,17 @@ import androidx.navigation.NavController
 import com.task.app.ui.viewmodels.MedicineViewModel
 
 @Composable
-fun MedicineListScreen(navController: NavController, username: String) {
+fun MedicineListScreen(navigator: Navigator, username: String) {
     val viewModel: MedicineViewModel = hiltViewModel()
 
     // Collect medicines and loading state
     val medicines = viewModel.medicines.collectAsState().value
     val isLoading = viewModel.isLoading.collectAsState().value
 
+    val greetingMessage = getGreetingMessage()
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Hello, $username!")
+        Text("Hello $greetingMessage, $username!")
         Text("Here are your medicines:")
 
         if (isLoading) {
@@ -44,7 +47,7 @@ fun MedicineListScreen(navController: NavController, username: String) {
                         medicineName = medicine.name,
                         medicineDose = medicine.dose,
                         medicineStrength = medicine.strength,
-                        onClick = { navController.navigate("details/${medicine.name}") }
+                        onClick = { navigator.navigateTo("details/${medicine.name.trim()}") }
                     )
                 }
             }
@@ -71,5 +74,19 @@ fun MedicineCard(
             Text("Dose: $medicineDose")
             Text("Strength: $medicineStrength")
         }
+    }
+}
+
+@Composable
+fun getGreetingMessage(): String {
+    val currentHour = remember {
+        java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+    }
+
+    return when (currentHour) {
+        in 5..11 -> "Good Morning"
+        in 12..16 -> "Good Afternoon"
+        in 17..20 -> "Good Evening"
+        else -> "Good Night"
     }
 }
